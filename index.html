@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GovCap | Material Intelligence</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+
+<style>
+:root {
+  /* GOOGLE MATERIAL PALETTE */
+  --md-sys-color-background: #F8F9FA;
+  --md-sys-color-surface: #FFFFFF;
+  --md-sys-color-primary: #1A73E8; /* Google Blue */
+  --md-sys-color-on-primary: #FFFFFF;
+  --md-sys-color-secondary: #5F6368;
+  --md-sys-color-outline: #DADCE0;
+  --md-sys-color-surface-variant: #F1F3F4;
+  
+  /* DATA VISUALIZATION COLORS */
+  --chart-blue: #4285F4;
+  --chart-red: #EA4335;
+  --chart-yellow: #FBBC04;
+  --chart-green: #34A853;
+  
+  /* SPACING & SHADOWS */
+  --elevation-1: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+  --elevation-2: 0 1px 3px 0 rgba(60,64,67,0.3), 0 4px 8px 3px rgba(60,64,67,0.15);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  
+  --font-brand: 'Google Sans', sans-serif;
+  --font-body: 'Roboto', sans-serif;
+}
+
+* { box-sizing: border-box; outline: none; margin: 0; padding: 0; }
+body { font-family: var(--font-body); background: var(--md-sys-color-background); color: #202124; height: 100vh; display: flex; overflow: hidden; -webkit-font-smoothing: antialiased; }
+
+/* --- APP SHELL --- */
+.app-shell { display: flex; width: 100%; height: 100%; }
+
+/* --- SIDEBAR --- */
+.sidebar {
+  width: 280px; background: var(--md-sys-color-surface); border-right: 1px solid var(--md-sys-color-outline);
+  display: flex; flex-direction: column; z-index: 50; flex-shrink: 0;
+}
+
+.brand-area { padding: 20px 24px; display: flex; align-items: center; gap: 12px; }
+.brand-logo { color: var(--md-sys-color-primary); font-size: 28px; }
+.brand-text { font-family: var(--font-brand); font-size: 22px; font-weight: 500; color: #5f6368; letter-spacing: -0.5px; }
+.brand-text span { color: var(--md-sys-color-primary); font-weight: 700; }
+
+.search-section { padding: 0 16px 24px; }
+.search-box {
+  background: var(--md-sys-color-surface-variant); border-radius: 8px; padding: 0 12px;
+  display: flex; align-items: center; height: 48px; transition: 0.2s; border: 1px solid transparent;
+}
+.search-box:focus-within { background: #fff; box-shadow: 0 1px 6px rgba(32,33,36,0.28); border-color: transparent; }
+.search-input { border: none; background: transparent; height: 100%; width: 100%; font-size: 16px; font-family: var(--font-body); color: #3C4043; margin-left: 8px; }
+
+/* CHIPS */
+.chips-grid { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 4px; }
+.chip {
+  height: 32px; padding: 0 12px; border-radius: 16px; border: 1px solid var(--md-sys-color-outline);
+  background: #fff; font-size: 13px; font-weight: 500; color: #3C4043; cursor: pointer;
+  display: flex; align-items: center; transition: 0.2s; font-family: var(--font-brand);
+}
+.chip:hover { background: #F1F3F4; border-color: #DADCE0; }
+.chip.active { background: #E8F0FE; color: #1967D2; border-color: #E8F0FE; }
+
+.primary-btn {
+  background: var(--md-sys-color-primary); color: #fff; border: none; height: 40px; border-radius: 20px;
+  width: 100%; font-family: var(--font-brand); font-weight: 500; font-size: 14px; cursor: pointer;
+  box-shadow: 0 1px 2px rgba(60,64,67,0.3); transition: 0.2s; margin-top: 16px; display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.primary-btn:hover { box-shadow: 0 2px 6px rgba(60,64,67,0.3); background: #185ABC; }
+
+/* INFO CARD */
+.info-card {
+  margin: 16px; padding: 16px; background: #E8F0FE; border-radius: 8px; color: #1967D2; font-size: 13px; line-height: 1.5;
+}
+.info-card strong { display: block; margin-bottom: 4px; font-family: var(--font-brand); font-size: 14px; }
+
+/* --- MAIN CONTENT --- */
+.main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
+
+.header {
+  padding: 16px 32px; background: var(--md-sys-color-surface); border-bottom: 1px solid var(--md-sys-color-outline);
+  display: flex; justify-content: space-between; align-items: center; height: 72px; flex-shrink: 0;
+}
+.page-title { font-family: var(--font-brand); font-size: 24px; color: #202124; }
+.meta-tag {
+  display: inline-flex; align-items: center; height: 32px; padding: 0 12px; background: #E8F0FE;
+  color: #1967D2; border-radius: 4px; font-size: 13px; font-weight: 500; margin-left: 12px; font-family: var(--font-brand);
+}
+
+.scroll-area { flex: 1; overflow-y: auto; padding: 24px 32px; }
+
+/* MASONRY GRID */
+.grid {
+  display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; padding-bottom: 48px;
+}
+
+/* CARDS */
+.card {
+  background: var(--md-sys-color-surface); border-radius: var(--radius-sm);
+  box-shadow: var(--elevation-1); border: 1px solid var(--md-sys-color-outline);
+  display: flex; flex-direction: column; overflow: hidden; transition: 0.2s;
+}
+.card:hover { box-shadow: var(--elevation-2); }
+
+.card-header {
+  padding: 16px 20px; border-bottom: 1px solid var(--md-sys-color-outline);
+  display: flex; justify-content: space-between; align-items: center; height: 56px;
+}
+.card-title { font-family: var(--font-brand); font-size: 16px; font-weight: 500; color: #202124; }
+.card-body { padding: 20px; flex: 1; min-width: 0; }
+.card-body.table-pad { padding: 0; }
+
+/* SPANS */
+.span-12 { grid-column: span 12; }
+.span-8 { grid-column: span 8; }
+.span-6 { grid-column: span 6; }
+.span-4 { grid-column: span 4; }
+.span-3 { grid-column: span 3; }
+
+/* KPI CARDS */
+.kpi-title { font-size: 12px; font-weight: 500; text-transform: uppercase; color: #5F6368; letter-spacing: 0.5px; margin-bottom: 8px; }
+.kpi-val { font-family: var(--font-brand); font-size: 32px; color: #202124; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.1; }
+.kpi-sub { font-size: 13px; color: #188038; margin-top: 8px; display: flex; align-items: center; gap: 4px; font-weight: 500; }
+.kpi-sub.neutral { color: #5F6368; }
+
+/* CHARTS */
+.chart-box { height: 240px; display: flex; align-items: flex-end; gap: 8px; padding-top: 24px; }
+.bar-col { flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; }
+.bar { background: var(--chart-blue); border-radius: 4px 4px 0 0; width: 100%; opacity: 0.8; transition: height 0.6s ease; min-height: 4px; }
+.bar:hover { opacity: 1; }
+.bar-label { text-align: center; margin-top: 12px; font-size: 12px; color: #5F6368; }
+.bar-val { text-align: center; margin-bottom: 6px; font-size: 12px; font-weight: 700; color: #202124; }
+
+/* THESIS & RISK */
+.thesis-section { margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid #F1F3F4; }
+.thesis-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.thesis-head { display: flex; align-items: center; gap: 8px; font-family: var(--font-brand); font-size: 14px; font-weight: 500; color: var(--md-sys-color-primary); margin-bottom: 8px; }
+.thesis-text { font-size: 14px; line-height: 1.6; color: #3C4043; }
+
+.risk-row { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; }
+.risk-label { width: 100px; font-size: 13px; font-weight: 500; color: #3C4043; flex-shrink: 0; }
+.risk-track { flex: 1; height: 8px; background: #F1F3F4; border-radius: 4px; overflow: hidden; }
+.risk-fill { height: 100%; border-radius: 4px; }
+.risk-val { width: 40px; text-align: right; font-size: 13px; color: #5F6368; }
+
+/* TABLES - FIXED LAYOUT */
+.data-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.data-table th {
+  text-align: left; padding: 12px 24px; border-bottom: 1px solid var(--md-sys-color-outline);
+  background: #fff; color: #5F6368; font-size: 12px; font-weight: 500;
+  position: sticky; top: 0; z-index: 2;
+}
+.data-table td {
+  padding: 14px 24px; border-bottom: 1px solid #F1F3F4; font-size: 14px; color: #202124;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: middle;
+}
+.data-table tr:hover td { background: #F8F9FA; }
+.data-table tr:last-child td { border-bottom: none; }
+
+.text-right { text-align: right; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; background: #F1F3F4; color: #5F6368; letter-spacing: 0.3px; }
+.badge.prime { background: #E6F4EA; color: #137333; }
+.badge.sub { background: #FEF7E0; color: #B06000; }
+
+/* LOADER */
+.loader-overlay {
+  position: fixed; inset: 0; background: rgba(255,255,255,0.9); z-index: 1000;
+  display: none; align-items: center; justify-content: center; flex-direction: column;
+}
+.spinner-google {
+  width: 48px; height: 48px; border: 4px solid #E8F0FE; border-top-color: #1A73E8;
+  border-radius: 50%; animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+  <div class="sidebar">
+    <div class="brand-area">
+      <span class="material-icons-round brand-logo">analytics</span>
+      <div class="brand-text">Gov<span>Cap</span></div>
+    </div>
+
+    <div class="search-section">
+      <div class="search-box">
+        <span class="material-icons-round" style="color: #5F6368;">search</span>
+        <input type="text" id="searchInput" class="search-input" value="Amazon Web Services">
+      </div>
+
+      <div style="margin-top: 16px; font-size: 11px; font-weight: 700; color: #5F6368; text-transform: uppercase; margin-bottom: 8px;">Quick Select</div>
+      <div class="chips-grid">
+        <div class="chip" onclick="App.quickLoad('Amazon Web Services')">AWS</div>
+        <div class="chip" onclick="App.quickLoad('Palantir')">Palantir</div>
+        <div class="chip" onclick="App.quickLoad('Carahsoft')">Carahsoft</div>
+        <div class="chip" onclick="App.quickLoad('General Dynamics')">GDIT</div>
+        <div class="chip" onclick="App.quickLoad('Booz Allen Hamilton')">Booz Allen</div>
+        <div class="chip" onclick="App.quickLoad('Oracle')">Oracle</div>
+      </div>
+
+      <button class="primary-btn" onclick="App.runAnalysis()">
+        <span class="material-icons-round" style="font-size: 18px;">refresh</span> Update Analysis
+      </button>
+
+      <div class="info-card">
+        <strong><span class="material-icons-round" style="font-size: 14px; vertical-align: middle;">date_range</span> 3-Year New Business</strong>
+        Analysis strictly filters for contracts starting after <span id="cutoffDateDisplay"></span>. Legacy contracts are excluded.
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="header">
+      <div>
+        <div class="page-title" id="companyTitle">Amazon Web Services</div>
+        <div style="margin-top: 4px; display: flex; align-items: center;">
+          <span style="font-size: 13px; color: #5F6368;">USASpending.gov Source</span>
+          <span class="meta-tag">New Business (36mo)</span>
+        </div>
+      </div>
+      <div>
+        <button class="chip" onclick="App.exportData()">
+          <span class="material-icons-round" style="font-size: 16px; margin-right: 6px;">download</span> Export
+        </button>
+      </div>
+    </div>
+
+    <div class="scroll-area">
+      <div class="grid">
+        
+        <div class="card span-3">
+          <div class="card-body">
+            <div class="kpi-title">Total Contract Value</div>
+            <div class="kpi-val" id="kpiTCV">-</div>
+            <div class="kpi-sub">Strict 3-Year Sum</div>
+          </div>
+        </div>
+        <div class="card span-3">
+          <div class="card-body">
+            <div class="kpi-title">Direct Prime Rev</div>
+            <div class="kpi-val" id="kpiPrime">-</div>
+            <div class="kpi-sub" id="subPrime">Margin Quality</div>
+          </div>
+        </div>
+        <div class="card span-3">
+          <div class="card-body">
+            <div class="kpi-title">Active Agencies</div>
+            <div class="kpi-val" id="kpiAgencies">-</div>
+            <div class="kpi-sub neutral">Customer Breadth</div>
+          </div>
+        </div>
+        <div class="card span-3">
+          <div class="card-body">
+            <div class="kpi-title">Avg. Deal Size</div>
+            <div class="kpi-val" id="kpiACV">-</div>
+            <div class="kpi-sub neutral">Contract Velocity</div>
+          </div>
+        </div>
+
+        <div class="card span-8">
+          <div class="card-header">
+            <div class="card-title">Investment Intelligence</div>
+          </div>
+          <div class="card-body">
+            <div id="thesisPanel">Loading...</div>
+          </div>
+        </div>
+
+        <div class="card span-4">
+          <div class="card-header">
+            <div class="card-title">Risk Profile</div>
+          </div>
+          <div class="card-body">
+            <div id="riskPanel">Loading...</div>
+          </div>
+        </div>
+
+        <div class="card span-8">
+          <div class="card-header">
+            <div class="card-title">New Business Trajectory</div>
+          </div>
+          <div class="card-body">
+            <div id="chartGrowth" class="chart-box"></div>
+          </div>
+        </div>
+
+        <div class="card span-4">
+          <div class="card-header">
+            <div class="card-title">Channel Composition</div>
+          </div>
+          <div class="card-body">
+            <div id="chartChannel" style="display: flex; flex-direction: column; justify-content: center; height: 100%;"></div>
+          </div>
+        </div>
+
+        <div class="card span-6">
+          <div class="card-header"><div class="card-title">Top Agencies (Obligated)</div></div>
+          <div class="card-body table-pad">
+            <table class="data-table">
+              <thead><tr><th>Agency</th><th class="text-right">Value</th><th class="text-right">Share</th></tr></thead>
+              <tbody id="tableAgencies"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card span-6">
+          <div class="card-header"><div class="card-title">Contract Vehicles</div></div>
+          <div class="card-body table-pad">
+            <table class="data-table">
+              <thead><tr><th>Vehicle</th><th class="text-right">Value</th><th class="text-right">Mix</th></tr></thead>
+              <tbody id="tableVehicles"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card span-12">
+          <div class="card-header"><div class="card-title">Transaction Log (Recent Wins)</div></div>
+          <div class="card-body table-pad">
+            <table class="data-table">
+              <colgroup><col style="width: 40%"><col style="width: 25%"><col style="width: 15%"><col style="width: 10%"><col style="width: 10%"></colgroup>
+              <thead><tr><th>Description</th><th>Agency</th><th>Type</th><th class="text-right">Value</th><th>Date</th></tr></thead>
+              <tbody id="tableContracts"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="loader" class="loader-overlay">
+  <div class="spinner-google"></div>
+  <div style="margin-top: 16px; font-family: 'Google Sans'; color: #5F6368; font-weight: 500;">Analyzing USASpending Data...</div>
+</div>
+
+<script>
+const App = {
+  target: '',
+  data: null,
+  
+  init() {
+    const d = new Date();
+    d.setFullYear(d.getFullYear() - 3);
+    document.getElementById('cutoffDateDisplay').innerText = d.toLocaleDateString();
+
+    this.runAnalysis();
+    
+    document.getElementById('searchInput').addEventListener('keydown', e => {
+      if(e.key === 'Enter') this.runAnalysis();
+    });
+  },
+
+  quickLoad(name) {
+    document.getElementById('searchInput').value = name;
+    this.runAnalysis();
+  },
+
+  async runAnalysis() {
+    this.target = document.getElementById('searchInput').value.trim();
+    if(!this.target) return;
+    
+    document.getElementById('companyTitle').innerText = this.target;
+    document.getElementById('loader').style.display = 'flex';
+
+    try {
+      const [prime, subs] = await Promise.all([
+        this.fetchPrime(this.target),
+        this.fetchSubs(this.target)
+      ]);
+      this.processData(prime, subs);
+    } catch(e) {
+      console.error(e);
+      alert("Error processing data.");
+    } finally {
+      document.getElementById('loader').style.display = 'none';
+    }
+  },
+
+  async fetchPrime(keyword) {
+    // API FILTER: ACTION DATE (Rough Filter)
+    const end = new Date().toISOString().split('T')[0];
+    const startObj = new Date(); 
+    startObj.setFullYear(new Date().getFullYear() - 3);
+    const start = startObj.toISOString().split('T')[0];
+
+    const res = await fetch('https://api.usaspending.gov/api/v2/search/spending_by_award/', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        filters: { 
+          keywords: [keyword], 
+          time_period: [{start_date: start, end_date: end}], 
+          award_type_codes: ['A','B','C','D'] 
+        },
+        fields: ['Award ID', 'Recipient Name', 'Award Amount', 'Awarding Agency', 'Start Date', 'Description'],
+        limit: 100, sort: 'Award Amount', order: 'desc'
+      })
+    });
+    return (await res.json()).results || [];
+  },
+
+  async fetchSubs(keyword) {
+    const end = new Date().toISOString().split('T')[0];
+    const startObj = new Date(); startObj.setFullYear(new Date().getFullYear() - 3);
+    
+    try {
+      const res = await fetch('https://api.usaspending.gov/api/v2/search/spending_by_award/', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          filters: { 
+            keywords: [keyword], 
+            time_period: [{start_date: startObj.toISOString().split('T')[0], end_date: end}], 
+            award_type_codes: ['A','B','C','D'] 
+          },
+          fields: ['Recipient Name', 'Award Amount'],
+          subawards: true, limit: 50
+        })
+      });
+      return (await res.json()).results || [];
+    } catch(e) { return []; }
+  },
+
+  processData(prime, subs) {
+    const cleanTarget = this.target.toLowerCase().replace(/[,.]/g, '');
+    const currentFY = this.getFY(new Date());
+    
+    // CLIENT FILTER: START DATE (Strict Filter)
+    const cutoffDate = new Date();
+    cutoffDate.setFullYear(cutoffDate.getFullYear() - 3);
+
+    let s = { total: 0, direct: 0, count: 0, agencies: {}, years: {}, partners: {}, vehicles: {}, contracts: [] };
+
+    prime.forEach(r => {
+      // STRICT CHECK: Discard old contracts even if they had recent activity
+      const startDt = new Date(r['Start Date']);
+      if (startDt < cutoffDate) return; 
+
+      const amt = r['Award Amount'] || 0;
+      if (amt <= 0) return;
+      
+      const fy = this.getFY(startDt);
+      s.years[fy] = (s.years[fy] || 0) + amt;
+
+      s.total += amt;
+      s.count++;
+      s.contracts.push(r);
+      
+      const ag = r['Awarding Agency'];
+      s.agencies[ag] = (s.agencies[ag] || 0) + amt;
+
+      if (r['Recipient Name'].toLowerCase().includes(cleanTarget)) {
+        s.direct += amt;
+      } else {
+        const pName = r['Recipient Name'];
+        s.partners[pName] = (s.partners[pName] || 0) + amt;
+      }
+
+      let v = 'Open Market';
+      const id = r['Award ID'];
+      if(id.startsWith('GS')) v = 'GSA Schedule';
+      else if(id.includes('SEWP')) v = 'NASA SEWP';
+      else if(id.startsWith('47Q')) v = 'GSA OASIS';
+      else if(id.startsWith('FA')) v = 'DoD IDIQ';
+      else if(id.startsWith('NNG')) v = 'NASA SEWP';
+      
+      s.vehicles[v] = (s.vehicles[v] || 0) + amt;
+    });
+
+    this.data = s;
+    this.renderAll(currentFY);
+  },
+
+  renderAll(currentFY) {
+    const s = this.data;
+    
+    // 1. KPIS
+    document.getElementById('kpiTCV').innerText = this.fmt(s.total);
+    
+    const primePct = s.total > 0 ? (s.direct/s.total)*100 : 0;
+    document.getElementById('kpiPrime').innerText = primePct.toFixed(0) + '%';
+    document.getElementById('subPrime').style.color = primePct > 50 ? '#188038' : '#EA4335';
+    
+    document.getElementById('kpiAgencies').innerText = Object.keys(s.agencies).length;
+    document.getElementById('kpiACV').innerText = this.fmtShort(s.total/s.count);
+
+    // 2. THESIS
+    const topAgency = Object.entries(s.agencies).sort((a,b)=>b[1]-a[1])[0];
+    const topShare = topAgency ? ((topAgency[1]/s.total)*100).toFixed(0) : 0;
+    const years = Object.keys(s.years).sort();
+    
+    document.getElementById('thesisPanel').innerHTML = `
+      <div class="thesis-section">
+        <div class="thesis-head"><span class="material-icons-round" style="font-size:18px;">trending_up</span> Growth & Position</div>
+        <div class="thesis-text">
+          <strong>${this.target}</strong> has secured <strong>${this.fmtShort(s.total)}</strong> in new contract awards over the last 36 months. 
+          Operating primarily as a <strong>${primePct > 50 ? 'Prime Contractor' : 'Subcontractor/Partner'}</strong> (${primePct.toFixed(0)}% direct), 
+          the company demonstrates ${s.total > 100000000 ? 'enterprise scale' : 'mid-market traction'}.
+        </div>
+      </div>
+      <div class="thesis-section">
+        <div class="thesis-head"><span class="material-icons-round" style="font-size:18px;">verified_user</span> Competitive Moat</div>
+        <div class="thesis-text">
+          Defensibility is driven by active relationships with <strong>${Object.keys(s.agencies).length} agencies</strong>. 
+          Top customer <strong>${topAgency ? topAgency[0] : 'None'}</strong> represents <strong>${topShare}%</strong> of recent bookings.
+        </div>
+      </div>
+    `;
+
+    // 3. RISK
+    let riskScore = 10;
+    if(topShare > 40) riskScore += 40;
+    if(primePct < 30) riskScore += 30;
+    
+    const renderRiskRow = (label, pct, threshold) => {
+      const color = pct > threshold ? '#EA4335' : '#34A853';
+      return `
+        <div class="risk-row">
+          <div class="risk-label">${label}</div>
+          <div class="risk-track"><div class="risk-fill" style="width:${pct}%; background:${color};"></div></div>
+          <div class="risk-val">${pct}%</div>
+        </div>`;
+    };
+
+    document.getElementById('riskPanel').innerHTML = `
+      ${renderRiskRow('Concentration', topShare, 40)}
+      ${renderRiskRow('Indirect Reliance', 100-primePct, 60)}
+      <div style="margin-top:16px; padding:12px; background:#F8F9FA; border-radius:8px; font-size:13px; color:#5F6368;">
+        <strong>Risk Score: ${riskScore}/100</strong><br>
+        ${riskScore > 50 ? 'High concentration risk detected.' : 'Balanced portfolio structure.'}
+      </div>
+    `;
+
+    // 4. CHARTS
+    const fullYears = years.filter(y => parseInt(y) < currentFY);
+    const maxVal = Math.max(...Object.values(s.years)) || 1;
+    
+    document.getElementById('chartGrowth').innerHTML = fullYears.length ? fullYears.map(y => {
+      const h = (s.years[y]/maxVal)*100;
+      return `
+        <div class="bar-col">
+          <div class="bar-val">${this.fmtShort(s.years[y])}</div>
+          <div class="bar" style="height:${h}%"></div>
+          <div class="bar-label">FY${y}</div>
+        </div>`;
+    }).join('') : '<div style="width:100%; text-align:center; color:#9AA0A6; font-size:14px;">Insufficient Full-Year Data</div>';
+
+    // Channel
+    const partners = Object.entries(s.partners).sort((a,b)=>b[1]-a[1]).slice(0,3);
+    let chanHTML = '';
+    const renderChanRow = (label, val, total, color) => {
+      const p = (val/total)*100;
+      return `
+        <div style="margin-bottom:12px">
+          <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:500; color:#3C4043; margin-bottom:4px;">
+            <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:180px;">${label}</span>
+            <span>${p.toFixed(0)}%</span>
+          </div>
+          <div style="width:100%; height:6px; background:#F1F3F4; border-radius:3px;"><div style="width:${p}%; height:100%; background:${color}; border-radius:3px;"></div></div>
+        </div>`;
+    };
+    
+    chanHTML += renderChanRow('Direct Prime', s.direct, s.total, '#34A853');
+    partners.forEach(p => chanHTML += renderChanRow(p[0], p[1], s.total, '#4285F4'));
+    document.getElementById('chartChannel').innerHTML = chanHTML;
+
+    // 5. TABLES
+    this.renderTable('tableAgencies', s.agencies, s.total);
+    this.renderTable('tableVehicles', s.vehicles, s.total);
+    this.renderContracts(s);
+  },
+
+  renderTable(id, data, total) {
+    const rows = Object.entries(data).sort((a,b)=>b[1]-a[1]).slice(0,6);
+    document.getElementById(id).innerHTML = rows.map(([n,v]) => {
+      const pct = (v/total)*100;
+      return `
+        <tr>
+          <td style="font-weight:500;" title="${n}">${n}</td>
+          <td class="text-right" style="font-family:'Roboto Mono'">${this.fmtShort(v)}</td>
+          <td class="text-right" style="font-family:'Roboto Mono'">${pct.toFixed(1)}%</td>
+        </tr>`;
+    }).join('');
+  },
+
+  renderContracts(s) {
+    const rows = s.contracts.sort((a,b) => new Date(b['Start Date']) - new Date(a['Start Date'])).slice(0,15);
+    const targetKey = this.target.toLowerCase().replace(/[,.]/g, '');
+    
+    document.getElementById('tableContracts').innerHTML = rows.map(c => {
+       const isPrime = (c['Recipient Name']||'').toLowerCase().includes(targetKey);
+       let veh = 'Open Market';
+       if(c['Award ID'].startsWith('GS')) veh = 'GSA';
+       if(c['Award ID'].includes('SEWP')) veh = 'SEWP';
+       
+       return `
+         <tr>
+           <td title="${c['Description']}">${(c['Description']||'').substring(0,60)}</td>
+           <td title="${c['Awarding Agency']}">${c['Awarding Agency']}</td>
+           <td><span class="badge ${isPrime?'prime':'sub'}">${isPrime?'Prime':'Partner'}</span></td>
+           <td class="text-right" style="font-family:'Roboto Mono'; font-weight:500;">${this.fmtShort(c['Award Amount'])}</td>
+           <td style="font-family:'Roboto Mono'">${c['Start Date']}</td>
+         </tr>`;
+    }).join('');
+  },
+
+  exportData() {
+    alert("Exporting data for " + this.target);
+  },
+
+  getFY(d) { return d.getMonth() >= 9 ? d.getFullYear() + 1 : d.getFullYear(); },
+  fmt(n) { return new Intl.NumberFormat('en-US', {style:'currency', currency:'USD', maximumFractionDigits:0}).format(n); },
+  fmtShort(n) {
+    if(n>=1e9) return '$'+(n/1e9).toFixed(1)+'B';
+    if(n>=1e6) return '$'+(n/1e6).toFixed(1)+'M';
+    if(n>=1e3) return '$'+(n/1e3).toFixed(0)+'K';
+    return '$'+n.toFixed(0);
+  }
+};
+
+App.init();
+</script>
+</body>
+</html>
