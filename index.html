@@ -2,208 +2,197 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>GovCap | Material Intelligence</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-  
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 
 <style>
 :root {
-  /* GOOGLE MATERIAL PALETTE */
-  --md-sys-color-background: #F8F9FA;
-  --md-sys-color-surface: #FFFFFF;
-  --md-sys-color-primary: #1A73E8; /* Google Blue */
-  --md-sys-color-on-primary: #FFFFFF;
-  --md-sys-color-secondary: #5F6368;
-  --md-sys-color-outline: #DADCE0;
-  --md-sys-color-surface-variant: #F1F3F4;
+  --bg-app: #F8F9FA;
+  --bg-surface: #FFFFFF;
+  --primary: #1A73E8;
+  --text-main: #202124;
+  --text-sec: #5F6368;
+  --outline: #DADCE0;
   
-  /* DATA VISUALIZATION COLORS */
-  --chart-blue: #4285F4;
-  --chart-red: #EA4335;
-  --chart-yellow: #FBBC04;
-  --chart-green: #34A853;
-  
-  /* SPACING & SHADOWS */
   --elevation-1: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
-  --elevation-2: 0 1px 3px 0 rgba(60,64,67,0.3), 0 4px 8px 3px rgba(60,64,67,0.15);
-  --radius-sm: 8px;
-  --radius-md: 12px;
+  --elevation-2: 0 4px 8px 3px rgba(60,64,67,0.15);
   
   --font-brand: 'Google Sans', sans-serif;
   --font-body: 'Roboto', sans-serif;
+  
+  --sidebar-width: 280px;
 }
 
-* { box-sizing: border-box; outline: none; margin: 0; padding: 0; }
-body { font-family: var(--font-body); background: var(--md-sys-color-background); color: #202124; height: 100vh; display: flex; overflow: hidden; -webkit-font-smoothing: antialiased; }
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { font-family: var(--font-body); background: var(--bg-app); color: var(--text-main); height: 100vh; display: flex; overflow: hidden; }
 
-/* --- APP SHELL --- */
-.app-shell { display: flex; width: 100%; height: 100%; }
+/* LAYOUT */
+.app-shell { display: flex; width: 100%; height: 100%; position: relative; }
 
-/* --- SIDEBAR --- */
+/* SIDEBAR (Desktop Fixed, Mobile Drawer) */
 .sidebar {
-  width: 280px; background: var(--md-sys-color-surface); border-right: 1px solid var(--md-sys-color-outline);
-  display: flex; flex-direction: column; z-index: 50; flex-shrink: 0;
+  width: var(--sidebar-width); background: var(--bg-surface); border-right: 1px solid var(--outline);
+  display: flex; flex-direction: column; z-index: 100;
+  transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
-.brand-area { padding: 20px 24px; display: flex; align-items: center; gap: 12px; }
-.brand-logo { color: var(--md-sys-color-primary); font-size: 28px; }
-.brand-text { font-family: var(--font-brand); font-size: 22px; font-weight: 500; color: #5f6368; letter-spacing: -0.5px; }
-.brand-text span { color: var(--md-sys-color-primary); font-weight: 700; }
+.sidebar-header { padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; min-height: 64px; }
+.brand { display: flex; align-items: center; gap: 8px; font-family: var(--font-brand); font-size: 20px; color: var(--text-sec); }
+.brand span { color: var(--primary); font-weight: 700; }
+.close-btn { display: none; background: none; border: none; color: var(--text-sec); cursor: pointer; }
 
-.search-section { padding: 0 16px 24px; }
+.sidebar-content { padding: 0 16px 20px; flex: 1; overflow-y: auto; }
+
+/* INPUTS */
 .search-box {
-  background: var(--md-sys-color-surface-variant); border-radius: 8px; padding: 0 12px;
-  display: flex; align-items: center; height: 48px; transition: 0.2s; border: 1px solid transparent;
+  background: #F1F3F4; border-radius: 8px; padding: 0 12px; height: 48px;
+  display: flex; align-items: center; margin-bottom: 16px;
 }
-.search-box:focus-within { background: #fff; box-shadow: 0 1px 6px rgba(32,33,36,0.28); border-color: transparent; }
-.search-input { border: none; background: transparent; height: 100%; width: 100%; font-size: 16px; font-family: var(--font-body); color: #3C4043; margin-left: 8px; }
+.search-input { border: none; background: transparent; height: 100%; width: 100%; font-size: 16px; margin-left: 8px; color: var(--text-main); }
 
-/* CHIPS */
-.chips-grid { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 4px; }
+.section-label { font-size: 11px; font-weight: 700; color: var(--text-sec); text-transform: uppercase; margin: 16px 0 8px; }
+
+.chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip {
-  height: 32px; padding: 0 12px; border-radius: 16px; border: 1px solid var(--md-sys-color-outline);
+  height: 32px; padding: 0 12px; border-radius: 16px; border: 1px solid var(--outline);
   background: #fff; font-size: 13px; font-weight: 500; color: #3C4043; cursor: pointer;
-  display: flex; align-items: center; transition: 0.2s; font-family: var(--font-brand);
+  display: flex; align-items: center; font-family: var(--font-brand);
 }
-.chip:hover { background: #F1F3F4; border-color: #DADCE0; }
-.chip.active { background: #E8F0FE; color: #1967D2; border-color: #E8F0FE; }
+.chip:active { background: #E8F0FE; border-color: var(--primary); color: var(--primary); }
 
-.primary-btn {
-  background: var(--md-sys-color-primary); color: #fff; border: none; height: 40px; border-radius: 20px;
-  width: 100%; font-family: var(--font-brand); font-weight: 500; font-size: 14px; cursor: pointer;
-  box-shadow: 0 1px 2px rgba(60,64,67,0.3); transition: 0.2s; margin-top: 16px; display: flex; align-items: center; justify-content: center; gap: 8px;
-}
-.primary-btn:hover { box-shadow: 0 2px 6px rgba(60,64,67,0.3); background: #185ABC; }
-
-/* INFO CARD */
-.info-card {
-  margin: 16px; padding: 16px; background: #E8F0FE; border-radius: 8px; color: #1967D2; font-size: 13px; line-height: 1.5;
-}
-.info-card strong { display: block; margin-bottom: 4px; font-family: var(--font-brand); font-size: 14px; }
-
-/* --- MAIN CONTENT --- */
-.main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
-
-.header {
-  padding: 16px 32px; background: var(--md-sys-color-surface); border-bottom: 1px solid var(--md-sys-color-outline);
-  display: flex; justify-content: space-between; align-items: center; height: 72px; flex-shrink: 0;
-}
-.page-title { font-family: var(--font-brand); font-size: 24px; color: #202124; }
-.meta-tag {
-  display: inline-flex; align-items: center; height: 32px; padding: 0 12px; background: #E8F0FE;
-  color: #1967D2; border-radius: 4px; font-size: 13px; font-weight: 500; margin-left: 12px; font-family: var(--font-brand);
+.fab-btn {
+  background: var(--primary); color: #fff; border: none; height: 44px; border-radius: 22px;
+  width: 100%; font-family: var(--font-brand); font-weight: 500; font-size: 14px;
+  margin-top: 24px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
 }
 
-.scroll-area { flex: 1; overflow-y: auto; padding: 24px 32px; }
+/* MAIN AREA */
+.main { flex: 1; display: flex; flex-direction: column; width: 100%; overflow: hidden; position: relative; }
 
-/* MASONRY GRID */
-.grid {
-  display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; padding-bottom: 48px;
+.top-bar {
+  height: 64px; background: var(--bg-surface); border-bottom: 1px solid var(--outline);
+  display: flex; align-items: center; justify-content: space-between; padding: 0 24px; flex-shrink: 0;
 }
+.menu-btn { display: none; background: none; border: none; color: var(--text-sec); margin-right: 16px; cursor: pointer; }
+
+.page-info h1 { font-family: var(--font-brand); font-size: 20px; font-weight: 400; color: var(--text-main); }
+.page-info div { font-size: 12px; color: var(--text-sec); display: flex; align-items: center; gap: 6px; }
+.badge { background: #E8F0FE; color: var(--primary); padding: 2px 6px; border-radius: 4px; font-weight: 500; }
+
+.content-scroll { flex: 1; overflow-y: auto; padding: 24px; -webkit-overflow-scrolling: touch; }
+
+/* GRID SYSTEM */
+.grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; padding-bottom: 80px; }
 
 /* CARDS */
 .card {
-  background: var(--md-sys-color-surface); border-radius: var(--radius-sm);
-  box-shadow: var(--elevation-1); border: 1px solid var(--md-sys-color-outline);
-  display: flex; flex-direction: column; overflow: hidden; transition: 0.2s;
+  background: var(--bg-surface); border-radius: 8px; border: 1px solid var(--outline);
+  box-shadow: 0 1px 2px rgba(60,64,67,0.1); display: flex; flex-direction: column; overflow: hidden;
 }
-.card:hover { box-shadow: var(--elevation-2); }
+.card-header { padding: 14px 20px; border-bottom: 1px solid #F1F3F4; font-family: var(--font-brand); font-size: 15px; font-weight: 500; }
+.card-body { padding: 20px; flex: 1; min-width: 0;}
+.table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
-.card-header {
-  padding: 16px 20px; border-bottom: 1px solid var(--md-sys-color-outline);
-  display: flex; justify-content: space-between; align-items: center; height: 56px;
-}
-.card-title { font-family: var(--font-brand); font-size: 16px; font-weight: 500; color: #202124; }
-.card-body { padding: 20px; flex: 1; min-width: 0; }
-.card-body.table-pad { padding: 0; }
+/* SPANS (Desktop) */
+.col-3 { grid-column: span 3; }
+.col-4 { grid-column: span 4; }
+.col-6 { grid-column: span 6; }
+.col-8 { grid-column: span 8; }
+.col-12 { grid-column: span 12; }
 
-/* SPANS */
-.span-12 { grid-column: span 12; }
-.span-8 { grid-column: span 8; }
-.span-6 { grid-column: span 6; }
-.span-4 { grid-column: span 4; }
-.span-3 { grid-column: span 3; }
-
-/* KPI CARDS */
-.kpi-title { font-size: 12px; font-weight: 500; text-transform: uppercase; color: #5F6368; letter-spacing: 0.5px; margin-bottom: 8px; }
-.kpi-val { font-family: var(--font-brand); font-size: 32px; color: #202124; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.1; }
-.kpi-sub { font-size: 13px; color: #188038; margin-top: 8px; display: flex; align-items: center; gap: 4px; font-weight: 500; }
-.kpi-sub.neutral { color: #5F6368; }
+/* KPI STYLES */
+.kpi-label { font-size: 11px; font-weight: 500; text-transform: uppercase; color: var(--text-sec); margin-bottom: 6px; letter-spacing: 0.5px; }
+.kpi-val { font-family: var(--font-brand); font-size: 28px; line-height: 1; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kpi-sub { font-size: 12px; margin-top: 6px; color: #188038; font-weight: 500; }
 
 /* CHARTS */
-.chart-box { height: 240px; display: flex; align-items: flex-end; gap: 8px; padding-top: 24px; }
+.chart-wrap { height: 220px; display: flex; align-items: flex-end; gap: 6px; padding-top: 10px; }
 .bar-col { flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; }
-.bar { background: var(--chart-blue); border-radius: 4px 4px 0 0; width: 100%; opacity: 0.8; transition: height 0.6s ease; min-height: 4px; }
-.bar:hover { opacity: 1; }
-.bar-label { text-align: center; margin-top: 12px; font-size: 12px; color: #5F6368; }
-.bar-val { text-align: center; margin-bottom: 6px; font-size: 12px; font-weight: 700; color: #202124; }
+.bar { width: 100%; background: #4285F4; border-radius: 4px 4px 0 0; min-height: 4px; transition: height 0.5s; }
+.bar-lbl { text-align: center; font-size: 10px; color: var(--text-sec); margin-top: 6px; }
+.bar-val { text-align: center; font-size: 10px; font-weight: 700; margin-bottom: 2px; }
 
-/* THESIS & RISK */
-.thesis-section { margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid #F1F3F4; }
-.thesis-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-.thesis-head { display: flex; align-items: center; gap: 8px; font-family: var(--font-brand); font-size: 14px; font-weight: 500; color: var(--md-sys-color-primary); margin-bottom: 8px; }
-.thesis-text { font-size: 14px; line-height: 1.6; color: #3C4043; }
-
-.risk-row { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; }
-.risk-label { width: 100px; font-size: 13px; font-weight: 500; color: #3C4043; flex-shrink: 0; }
-.risk-track { flex: 1; height: 8px; background: #F1F3F4; border-radius: 4px; overflow: hidden; }
-.risk-fill { height: 100%; border-radius: 4px; }
-.risk-val { width: 40px; text-align: right; font-size: 13px; color: #5F6368; }
-
-/* TABLES - FIXED LAYOUT */
-.data-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-.data-table th {
-  text-align: left; padding: 12px 24px; border-bottom: 1px solid var(--md-sys-color-outline);
-  background: #fff; color: #5F6368; font-size: 12px; font-weight: 500;
-  position: sticky; top: 0; z-index: 2;
-}
-.data-table td {
-  padding: 14px 24px; border-bottom: 1px solid #F1F3F4; font-size: 14px; color: #202124;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: middle;
-}
-.data-table tr:hover td { background: #F8F9FA; }
-.data-table tr:last-child td { border-bottom: none; }
-
+/* TABLES */
+.data-table { width: 100%; border-collapse: collapse; min-width: 400px; table-layout: fixed;}
+.data-table th { text-align: left; padding: 12px 20px; background: #fff; font-size: 11px; color: var(--text-sec); font-weight: 500; border-bottom: 1px solid var(--outline); position: sticky; top: 0; }
+.data-table td { padding: 12px 20px; font-size: 13px; border-bottom: 1px solid #F1F3F4; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .text-right { text-align: right; }
-.badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; background: #F1F3F4; color: #5F6368; letter-spacing: 0.3px; }
-.badge.prime { background: #E6F4EA; color: #137333; }
-.badge.sub { background: #FEF7E0; color: #B06000; }
+
+/* RISK */
+.risk-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.risk-name { font-size: 12px; font-weight: 500; width: 90px; flex-shrink: 0; }
+.risk-bar-bg { flex: 1; height: 6px; background: #F1F3F4; border-radius: 3px; overflow: hidden; }
+.risk-bar { height: 100%; border-radius: 3px; }
+
+/* BACKDROP (Mobile) */
+.backdrop {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 90;
+  opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
 
 /* LOADER */
-.loader-overlay {
-  position: fixed; inset: 0; background: rgba(255,255,255,0.9); z-index: 1000;
-  display: none; align-items: center; justify-content: center; flex-direction: column;
-}
-.spinner-google {
-  width: 48px; height: 48px; border: 4px solid #E8F0FE; border-top-color: #1A73E8;
-  border-radius: 50%; animation: spin 1s linear infinite;
-}
+.loader { position: fixed; inset: 0; background: rgba(255,255,255,0.95); z-index: 200; display: none; align-items: center; justify-content: center; flex-direction: column; }
+.spinner { width: 40px; height: 40px; border: 4px solid #E8F0FE; border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
+/* --- MOBILE RESPONSIVE --- */
+@media (max-width: 768px) {
+  .sidebar { position: fixed; top: 0; left: 0; bottom: 0; transform: translateX(-100%); box-shadow: var(--elevation-2); }
+  .sidebar.open { transform: translateX(0); }
+  .backdrop.open { opacity: 1; pointer-events: auto; }
+  
+  .close-btn { display: block; }
+  .menu-btn { display: block; }
+  .top-bar { padding: 0 16px; }
+  
+  .content-scroll { padding: 16px; }
+  .grid { display: flex; flex-direction: column; gap: 16px; }
+  
+  .col-3, .col-4, .col-6, .col-8, .col-12 { width: 100%; }
+  
+  .kpi-val { font-size: 24px; }
+  .card-header { padding: 12px 16px; }
+  .card-body { padding: 16px; }
+  
+  .risk-row { gap: 8px; }
+  .risk-name { width: 80px; }
+}
 </style>
 </head>
 <body>
 
+<div class="loader" id="loader">
+  <div class="spinner"></div>
+  <div style="margin-top:16px; font-family:'Google Sans'; color:#5F6368; font-weight:500;">Analyzing Data...</div>
+</div>
+
+<div class="backdrop" id="backdrop" onclick="App.toggleSidebar()"></div>
+
 <div class="app-shell">
-  <div class="sidebar">
-    <div class="brand-area">
-      <span class="material-icons-round brand-logo">analytics</span>
-      <div class="brand-text">Gov<span>Cap</span></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="brand">
+        <span class="material-icons-round">analytics</span>
+        Gov<span>Cap</span>
+      </div>
+      <button class="close-btn" onclick="App.toggleSidebar()"><span class="material-icons-round">close</span></button>
     </div>
 
-    <div class="search-section">
+    <div class="sidebar-content">
+      <div class="section-label">Company Search</div>
       <div class="search-box">
-        <span class="material-icons-round" style="color: #5F6368;">search</span>
+        <span class="material-icons-round" style="color:#5F6368;">search</span>
         <input type="text" id="searchInput" class="search-input" value="Amazon Web Services">
       </div>
 
-      <div style="margin-top: 16px; font-size: 11px; font-weight: 700; color: #5F6368; text-transform: uppercase; margin-bottom: 8px;">Quick Select</div>
-      <div class="chips-grid">
+      <div class="section-label">Quick Access</div>
+      <div class="chip-group">
         <div class="chip" onclick="App.quickLoad('Amazon Web Services')">AWS</div>
         <div class="chip" onclick="App.quickLoad('Palantir')">Palantir</div>
         <div class="chip" onclick="App.quickLoad('Carahsoft')">Carahsoft</div>
@@ -212,126 +201,121 @@ body { font-family: var(--font-body); background: var(--md-sys-color-background)
         <div class="chip" onclick="App.quickLoad('Oracle')">Oracle</div>
       </div>
 
-      <button class="primary-btn" onclick="App.runAnalysis()">
-        <span class="material-icons-round" style="font-size: 18px;">refresh</span> Update Analysis
+      <button class="fab-btn" onclick="App.runAnalysis()">
+        <span class="material-icons-round">refresh</span> Update Analysis
       </button>
 
-      <div class="info-card">
-        <strong><span class="material-icons-round" style="font-size: 14px; vertical-align: middle;">date_range</span> 3-Year New Business</strong>
-        Analysis strictly filters for contracts starting after <span id="cutoffDateDisplay"></span>. Legacy contracts are excluded.
+      <div style="margin-top:24px; padding:12px; background:#E8F0FE; border-radius:8px; color:#1967D2; font-size:12px; line-height:1.5;">
+        <strong>Strict 3-Year Filter</strong><br>
+        Showing only new contracts awarded after <span id="cutoffDisplay"></span>.
       </div>
     </div>
-  </div>
+  </aside>
 
-  <div class="main">
-    <div class="header">
-      <div>
-        <div class="page-title" id="companyTitle">Amazon Web Services</div>
-        <div style="margin-top: 4px; display: flex; align-items: center;">
-          <span style="font-size: 13px; color: #5F6368;">USASpending.gov Source</span>
-          <span class="meta-tag">New Business (36mo)</span>
+  <main class="main">
+    <div class="top-bar">
+      <div style="display:flex; align-items:center;">
+        <button class="menu-btn" onclick="App.toggleSidebar()"><span class="material-icons-round">menu</span></button>
+        <div class="page-info">
+          <h1 id="pageTitle">Amazon Web Services</h1>
+          <div>
+            <span class="material-icons-round" style="font-size:14px;">verified</span>
+            USASpending.gov
+            <span class="badge" style="margin-left:8px;">New Business (36mo)</span>
+          </div>
         </div>
       </div>
-      <div>
-        <button class="chip" onclick="App.exportData()">
-          <span class="material-icons-round" style="font-size: 16px; margin-right: 6px;">download</span> Export
-        </button>
-      </div>
+      <button class="chip" onclick="App.exportData()">
+        <span class="material-icons-round" style="font-size:16px; margin-right:4px;">download</span> Export
+      </button>
     </div>
 
-    <div class="scroll-area">
+    <div class="content-scroll">
       <div class="grid">
         
-        <div class="card span-3">
+        <div class="card col-3">
           <div class="card-body">
-            <div class="kpi-title">Total Contract Value</div>
+            <div class="kpi-label">Total Contract Value</div>
             <div class="kpi-val" id="kpiTCV">-</div>
-            <div class="kpi-sub">Strict 3-Year Sum</div>
+            <div class="kpi-sub" style="color:#5F6368;">Strict 3-Year Sum</div>
           </div>
         </div>
-        <div class="card span-3">
+        <div class="card col-3">
           <div class="card-body">
-            <div class="kpi-title">Direct Prime Rev</div>
+            <div class="kpi-label">Prime Revenue</div>
             <div class="kpi-val" id="kpiPrime">-</div>
-            <div class="kpi-sub" id="subPrime">Margin Quality</div>
+            <div class="kpi-sub" id="subPrime">Direct Awards</div>
           </div>
         </div>
-        <div class="card span-3">
+        <div class="card col-3">
           <div class="card-body">
-            <div class="kpi-title">Active Agencies</div>
+            <div class="kpi-label">Active Agencies</div>
             <div class="kpi-val" id="kpiAgencies">-</div>
-            <div class="kpi-sub neutral">Customer Breadth</div>
+            <div class="kpi-sub" style="color:#5F6368;">Customer Base</div>
           </div>
         </div>
-        <div class="card span-3">
+        <div class="card col-3">
           <div class="card-body">
-            <div class="kpi-title">Avg. Deal Size</div>
+            <div class="kpi-label">Avg. Deal Size</div>
             <div class="kpi-val" id="kpiACV">-</div>
-            <div class="kpi-sub neutral">Contract Velocity</div>
+            <div class="kpi-sub" style="color:#5F6368;">Contract Velocity</div>
           </div>
         </div>
 
-        <div class="card span-8">
-          <div class="card-header">
-            <div class="card-title">Investment Intelligence</div>
+        <div class="card col-8">
+          <div class="card-header">Investment Thesis</div>
+          <div class="card-body" id="thesisPanel">
+            <div style="color:#9AA0A6;">Run analysis to generate thesis...</div>
           </div>
+        </div>
+
+        <div class="card col-4">
+          <div class="card-header">Risk Profile</div>
+          <div class="card-body" id="riskPanel">
+            <div style="color:#9AA0A6;">Pending data...</div>
+          </div>
+        </div>
+
+        <div class="card col-8">
+          <div class="card-header">New Business Growth (Fiscal Year)</div>
           <div class="card-body">
-            <div id="thesisPanel">Loading...</div>
+            <div class="chart-wrap" id="chartGrowth"></div>
           </div>
         </div>
 
-        <div class="card span-4">
-          <div class="card-header">
-            <div class="card-title">Risk Profile</div>
-          </div>
-          <div class="card-body">
-            <div id="riskPanel">Loading...</div>
+        <div class="card col-4">
+          <div class="card-header">Channel Composition</div>
+          <div class="card-body" id="chartChannel" style="display:flex; flex-direction:column; justify-content:center;">
           </div>
         </div>
 
-        <div class="card span-8">
-          <div class="card-header">
-            <div class="card-title">New Business Trajectory</div>
-          </div>
-          <div class="card-body">
-            <div id="chartGrowth" class="chart-box"></div>
-          </div>
-        </div>
-
-        <div class="card span-4">
-          <div class="card-header">
-            <div class="card-title">Channel Composition</div>
-          </div>
-          <div class="card-body">
-            <div id="chartChannel" style="display: flex; flex-direction: column; justify-content: center; height: 100%;"></div>
-          </div>
-        </div>
-
-        <div class="card span-6">
-          <div class="card-header"><div class="card-title">Top Agencies (Obligated)</div></div>
-          <div class="card-body table-pad">
+        <div class="card col-6">
+          <div class="card-header">Top Agencies (Obligated)</div>
+          <div class="card-body table-responsive" style="padding:0;">
             <table class="data-table">
+              <colgroup><col style="width: 50%"><col style="width: 25%"><col style="width: 25%"></colgroup>
               <thead><tr><th>Agency</th><th class="text-right">Value</th><th class="text-right">Share</th></tr></thead>
               <tbody id="tableAgencies"></tbody>
             </table>
           </div>
         </div>
 
-        <div class="card span-6">
-          <div class="card-header"><div class="card-title">Contract Vehicles</div></div>
-          <div class="card-body table-pad">
+        <div class="card col-6">
+          <div class="card-header">Contract Vehicles</div>
+          <div class="card-body table-responsive" style="padding:0;">
             <table class="data-table">
+              <colgroup><col style="width: 50%"><col style="width: 25%"><col style="width: 25%"></colgroup>
               <thead><tr><th>Vehicle</th><th class="text-right">Value</th><th class="text-right">Mix</th></tr></thead>
               <tbody id="tableVehicles"></tbody>
             </table>
           </div>
         </div>
 
-        <div class="card span-12">
-          <div class="card-header"><div class="card-title">Transaction Log (Recent Wins)</div></div>
-          <div class="card-body table-pad">
+        <div class="card col-12">
+          <div class="card-header">Recent Transactions</div>
+          <div class="card-body table-responsive" style="padding:0;">
             <table class="data-table">
-              <colgroup><col style="width: 40%"><col style="width: 25%"><col style="width: 15%"><col style="width: 10%"><col style="width: 10%"></colgroup>
+              <colgroup><col style="width: 40%"><col style="width: 20%"><col style="width: 15%"><col style="width: 15%"><col style="width: 10%"></colgroup>
               <thead><tr><th>Description</th><th>Agency</th><th>Type</th><th class="text-right">Value</th><th>Date</th></tr></thead>
               <tbody id="tableContracts"></tbody>
             </table>
@@ -340,44 +324,48 @@ body { font-family: var(--font-body); background: var(--md-sys-color-background)
 
       </div>
     </div>
-  </div>
-</div>
-
-<div id="loader" class="loader-overlay">
-  <div class="spinner-google"></div>
-  <div style="margin-top: 16px; font-family: 'Google Sans'; color: #5F6368; font-weight: 500;">Analyzing USASpending Data...</div>
+  </main>
 </div>
 
 <script>
 const App = {
   target: '',
-  data: null,
   
   init() {
+    // Set Date in UI
     const d = new Date();
     d.setFullYear(d.getFullYear() - 3);
-    document.getElementById('cutoffDateDisplay').innerText = d.toLocaleDateString();
+    document.getElementById('cutoffDisplay').innerText = d.toLocaleDateString();
 
-    this.runAnalysis();
-    
-    document.getElementById('searchInput').addEventListener('keydown', e => {
+    document.getElementById('searchInput').addEventListener('keypress', (e) => {
       if(e.key === 'Enter') this.runAnalysis();
     });
+    
+    // Auto-run
+    this.runAnalysis();
+  },
+
+  toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('backdrop').classList.toggle('open');
   },
 
   quickLoad(name) {
     document.getElementById('searchInput').value = name;
     this.runAnalysis();
+    // Close sidebar on mobile selection
+    if(window.innerWidth <= 768) this.toggleSidebar();
   },
 
   async runAnalysis() {
     this.target = document.getElementById('searchInput').value.trim();
     if(!this.target) return;
     
-    document.getElementById('companyTitle').innerText = this.target;
+    document.getElementById('pageTitle').innerText = this.target;
     document.getElementById('loader').style.display = 'flex';
 
     try {
+      // Parallel fetch
       const [prime, subs] = await Promise.all([
         this.fetchPrime(this.target),
         this.fetchSubs(this.target)
@@ -385,27 +373,26 @@ const App = {
       this.processData(prime, subs);
     } catch(e) {
       console.error(e);
-      alert("Error processing data.");
+      alert('Connection Error. Please check company name.');
     } finally {
       document.getElementById('loader').style.display = 'none';
     }
   },
 
   async fetchPrime(keyword) {
-    // API FILTER: ACTION DATE (Rough Filter)
     const end = new Date().toISOString().split('T')[0];
-    const startObj = new Date(); 
-    startObj.setFullYear(new Date().getFullYear() - 3);
+    const startObj = new Date(); startObj.setFullYear(new Date().getFullYear() - 3);
     const start = startObj.toISOString().split('T')[0];
 
+    // API Call
     const res = await fetch('https://api.usaspending.gov/api/v2/search/spending_by_award/', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        filters: { 
-          keywords: [keyword], 
-          time_period: [{start_date: start, end_date: end}], 
-          award_type_codes: ['A','B','C','D'] 
+        filters: {
+          keywords: [keyword],
+          time_period: [{start_date: start, end_date: end}],
+          award_type_codes: ['A','B','C','D']
         },
         fields: ['Award ID', 'Recipient Name', 'Award Amount', 'Awarding Agency', 'Start Date', 'Description'],
         limit: 100, sort: 'Award Amount', order: 'desc'
@@ -423,11 +410,7 @@ const App = {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
-          filters: { 
-            keywords: [keyword], 
-            time_period: [{start_date: startObj.toISOString().split('T')[0], end_date: end}], 
-            award_type_codes: ['A','B','C','D'] 
-          },
+          filters: { keywords: [keyword], time_period: [{start_date: startObj.toISOString().split('T')[0], end_date: end}], award_type_codes: ['A','B','C','D'] },
           fields: ['Recipient Name', 'Award Amount'],
           subawards: true, limit: 50
         })
@@ -440,16 +423,16 @@ const App = {
     const cleanTarget = this.target.toLowerCase().replace(/[,.]/g, '');
     const currentFY = this.getFY(new Date());
     
-    // CLIENT FILTER: START DATE (Strict Filter)
+    // STRICT CLIENT-SIDE DATE FILTER
     const cutoffDate = new Date();
     cutoffDate.setFullYear(cutoffDate.getFullYear() - 3);
 
     let s = { total: 0, direct: 0, count: 0, agencies: {}, years: {}, partners: {}, vehicles: {}, contracts: [] };
 
     prime.forEach(r => {
-      // STRICT CHECK: Discard old contracts even if they had recent activity
+      // 1. Strict Date Check
       const startDt = new Date(r['Start Date']);
-      if (startDt < cutoffDate) return; 
+      if (startDt < cutoffDate) return;
 
       const amt = r['Award Amount'] || 0;
       if (amt <= 0) return;
@@ -460,15 +443,12 @@ const App = {
       s.total += amt;
       s.count++;
       s.contracts.push(r);
-      
-      const ag = r['Awarding Agency'];
-      s.agencies[ag] = (s.agencies[ag] || 0) + amt;
+      s.agencies[r['Awarding Agency']] = (s.agencies[r['Awarding Agency']] || 0) + amt;
 
       if (r['Recipient Name'].toLowerCase().includes(cleanTarget)) {
         s.direct += amt;
       } else {
-        const pName = r['Recipient Name'];
-        s.partners[pName] = (s.partners[pName] || 0) + amt;
+        s.partners[r['Recipient Name']] = (s.partners[r['Recipient Name']] || 0) + amt;
       }
 
       let v = 'Open Market';
@@ -482,145 +462,151 @@ const App = {
       s.vehicles[v] = (s.vehicles[v] || 0) + amt;
     });
 
-    this.data = s;
-    this.renderAll(currentFY);
+    subs.forEach(r => {
+      s.partners[r['Recipient Name']] = (s.partners[r['Recipient Name']] || 0) + (r['Award Amount'] || 0);
+    });
+
+    this.renderAll(s, currentFY);
   },
 
-  renderAll(currentFY) {
-    const s = this.data;
-    
-    // 1. KPIS
+  renderAll(s, currentFY) {
+    // KPIS
     document.getElementById('kpiTCV').innerText = this.fmt(s.total);
     
     const primePct = s.total > 0 ? (s.direct/s.total)*100 : 0;
     document.getElementById('kpiPrime').innerText = primePct.toFixed(0) + '%';
+    // FIX applied here: added id="subPrime" to HTML above so this executes perfectly
     document.getElementById('subPrime').style.color = primePct > 50 ? '#188038' : '#EA4335';
+    document.getElementById('subPrime').innerText = primePct > 50 ? 'Strong Prime' : 'Channel Heavy';
     
     document.getElementById('kpiAgencies').innerText = Object.keys(s.agencies).length;
     document.getElementById('kpiACV').innerText = this.fmtShort(s.total/s.count);
 
-    // 2. THESIS
-    const topAgency = Object.entries(s.agencies).sort((a,b)=>b[1]-a[1])[0];
-    const topShare = topAgency ? ((topAgency[1]/s.total)*100).toFixed(0) : 0;
+    // THESIS & RISK
+    this.renderThesis(s, primePct);
+    this.renderRisk(s, primePct);
+
+    // GROWTH CHART (Exclude Partial)
     const years = Object.keys(s.years).sort();
-    
-    document.getElementById('thesisPanel').innerHTML = `
-      <div class="thesis-section">
-        <div class="thesis-head"><span class="material-icons-round" style="font-size:18px;">trending_up</span> Growth & Position</div>
-        <div class="thesis-text">
-          <strong>${this.target}</strong> has secured <strong>${this.fmtShort(s.total)}</strong> in new contract awards over the last 36 months. 
-          Operating primarily as a <strong>${primePct > 50 ? 'Prime Contractor' : 'Subcontractor/Partner'}</strong> (${primePct.toFixed(0)}% direct), 
-          the company demonstrates ${s.total > 100000000 ? 'enterprise scale' : 'mid-market traction'}.
-        </div>
-      </div>
-      <div class="thesis-section">
-        <div class="thesis-head"><span class="material-icons-round" style="font-size:18px;">verified_user</span> Competitive Moat</div>
-        <div class="thesis-text">
-          Defensibility is driven by active relationships with <strong>${Object.keys(s.agencies).length} agencies</strong>. 
-          Top customer <strong>${topAgency ? topAgency[0] : 'None'}</strong> represents <strong>${topShare}%</strong> of recent bookings.
-        </div>
-      </div>
-    `;
-
-    // 3. RISK
-    let riskScore = 10;
-    if(topShare > 40) riskScore += 40;
-    if(primePct < 30) riskScore += 30;
-    
-    const renderRiskRow = (label, pct, threshold) => {
-      const color = pct > threshold ? '#EA4335' : '#34A853';
-      return `
-        <div class="risk-row">
-          <div class="risk-label">${label}</div>
-          <div class="risk-track"><div class="risk-fill" style="width:${pct}%; background:${color};"></div></div>
-          <div class="risk-val">${pct}%</div>
-        </div>`;
-    };
-
-    document.getElementById('riskPanel').innerHTML = `
-      ${renderRiskRow('Concentration', topShare, 40)}
-      ${renderRiskRow('Indirect Reliance', 100-primePct, 60)}
-      <div style="margin-top:16px; padding:12px; background:#F8F9FA; border-radius:8px; font-size:13px; color:#5F6368;">
-        <strong>Risk Score: ${riskScore}/100</strong><br>
-        ${riskScore > 50 ? 'High concentration risk detected.' : 'Balanced portfolio structure.'}
-      </div>
-    `;
-
-    // 4. CHARTS
     const fullYears = years.filter(y => parseInt(y) < currentFY);
     const maxVal = Math.max(...Object.values(s.years)) || 1;
     
     document.getElementById('chartGrowth').innerHTML = fullYears.length ? fullYears.map(y => {
       const h = (s.years[y]/maxVal)*100;
-      return `
-        <div class="bar-col">
-          <div class="bar-val">${this.fmtShort(s.years[y])}</div>
-          <div class="bar" style="height:${h}%"></div>
-          <div class="bar-label">FY${y}</div>
-        </div>`;
-    }).join('') : '<div style="width:100%; text-align:center; color:#9AA0A6; font-size:14px;">Insufficient Full-Year Data</div>';
+      return `<div class="bar-col"><div class="bar-val">${this.fmtShort(s.years[y])}</div><div class="bar" style="height:${h}%"></div><div class="bar-lbl">FY${y}</div></div>`;
+    }).join('') : '<div style="width:100%; text-align:center; color:#5F6368; align-self:center;">Insufficient Data</div>';
 
-    // Channel
+    // CHANNEL CHART
     const partners = Object.entries(s.partners).sort((a,b)=>b[1]-a[1]).slice(0,3);
     let chanHTML = '';
-    const renderChanRow = (label, val, total, color) => {
-      const p = (val/total)*100;
-      return `
-        <div style="margin-bottom:12px">
-          <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:500; color:#3C4043; margin-bottom:4px;">
-            <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:180px;">${label}</span>
-            <span>${p.toFixed(0)}%</span>
-          </div>
-          <div style="width:100%; height:6px; background:#F1F3F4; border-radius:3px;"><div style="width:${p}%; height:100%; background:${color}; border-radius:3px;"></div></div>
-        </div>`;
+    const renderChan = (lbl, val, col) => {
+      const p = s.total > 0 ? (val/s.total)*100 : 0;
+      return `<div style="margin-bottom:8px"><div style="display:flex; justify-content:space-between; font-size:12px; color:#5F6368; margin-bottom:2px;"><span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:180px;" title="${lbl}">${lbl}</span><span>${p.toFixed(0)}%</span></div><div style="height:6px; background:#F1F3F4; border-radius:3px;"><div style="width:${p}%; height:100%; background:${col}; border-radius:3px;"></div></div></div>`;
     };
-    
-    chanHTML += renderChanRow('Direct Prime', s.direct, s.total, '#34A853');
-    partners.forEach(p => chanHTML += renderChanRow(p[0], p[1], s.total, '#4285F4'));
+    chanHTML += renderChan('Direct Prime', s.direct, '#34A853');
+    partners.forEach(p => chanHTML += renderChan(p[0], p[1], '#4285F4'));
     document.getElementById('chartChannel').innerHTML = chanHTML;
 
-    // 5. TABLES
+    // TABLES
     this.renderTable('tableAgencies', s.agencies, s.total);
     this.renderTable('tableVehicles', s.vehicles, s.total);
-    this.renderContracts(s);
+    this.renderContracts(s.contracts);
+  },
+
+  renderThesis(s, primePct) {
+    const topAgency = Object.entries(s.agencies).sort((a,b)=>b[1]-a[1])[0];
+    const topShare = topAgency ? ((topAgency[1]/s.total)*100).toFixed(0) : 0;
+    
+    document.getElementById('thesisPanel').innerHTML = `
+      <div class="thesis-section">
+        <div class="thesis-head"><span class="material-icons-round" style="font-size:18px;">trending_up</span> Growth</div>
+        <div class="thesis-text">Target generated <strong>${this.fmtShort(s.total)}</strong> in new awards (3yr). Operating as <strong>${primePct.toFixed(0)}% Prime</strong>.</div>
+      </div>
+      <div class="thesis-section">
+        <div class="thesis-head"><span class="material-icons-round" style="font-size:18px;">shield</span> Moat</div>
+        <div class="thesis-text">Top customer <strong>${topAgency ? topAgency[0] : 'N/A'}</strong> holds <strong>${topShare}%</strong> of bookings.</div>
+      </div>
+    `;
+  },
+
+  renderRisk(s, primePct) {
+    const topAgency = Object.entries(s.agencies).sort((a,b)=>b[1]-a[1])[0];
+    const topShare = topAgency ? ((topAgency[1]/s.total)*100) : 0;
+    
+    const renderRiskRow = (lbl, val, bad) => {
+      const col = val > bad ? '#EA4335' : '#34A853';
+      return `<div class="risk-row"><div class="risk-name">${lbl}</div><div class="risk-bar-bg"><div class="risk-bar" style="width:${val}%; background:${col}"></div></div><div class="risk-val">${val.toFixed(0)}%</div></div>`;
+    };
+    
+    document.getElementById('riskPanel').innerHTML = `
+      ${renderRiskRow('Concentration', topShare, 40)}
+      ${renderRiskRow('Indirect', 100-primePct, 50)}
+    `;
   },
 
   renderTable(id, data, total) {
-    const rows = Object.entries(data).sort((a,b)=>b[1]-a[1]).slice(0,6);
-    document.getElementById(id).innerHTML = rows.map(([n,v]) => {
-      const pct = (v/total)*100;
-      return `
-        <tr>
-          <td style="font-weight:500;" title="${n}">${n}</td>
-          <td class="text-right" style="font-family:'Roboto Mono'">${this.fmtShort(v)}</td>
-          <td class="text-right" style="font-family:'Roboto Mono'">${pct.toFixed(1)}%</td>
-        </tr>`;
-    }).join('');
+    const rows = Object.entries(data).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    document.getElementById(id).innerHTML = rows.map(([n,v]) => `
+      <tr>
+        <td title="${n}">${n}</td>
+        <td class="text-right" style="font-family:'Roboto Mono'">${this.fmtShort(v)}</td>
+        <td class="text-right" style="font-family:'Roboto Mono'">${((v/total)*100).toFixed(1)}%</td>
+      </tr>`).join('');
   },
 
-  renderContracts(s) {
-    const rows = s.contracts.sort((a,b) => new Date(b['Start Date']) - new Date(a['Start Date'])).slice(0,15);
+  renderContracts(contracts) {
+    const rows = contracts.sort((a,b) => new Date(b['Start Date']) - new Date(a['Start Date'])).slice(0,25);
     const targetKey = this.target.toLowerCase().replace(/[,.]/g, '');
     
     document.getElementById('tableContracts').innerHTML = rows.map(c => {
        const isPrime = (c['Recipient Name']||'').toLowerCase().includes(targetKey);
-       let veh = 'Open Market';
-       if(c['Award ID'].startsWith('GS')) veh = 'GSA';
-       if(c['Award ID'].includes('SEWP')) veh = 'SEWP';
-       
        return `
          <tr>
            <td title="${c['Description']}">${(c['Description']||'').substring(0,60)}</td>
            <td title="${c['Awarding Agency']}">${c['Awarding Agency']}</td>
            <td><span class="badge ${isPrime?'prime':'sub'}">${isPrime?'Prime':'Partner'}</span></td>
-           <td class="text-right" style="font-family:'Roboto Mono'; font-weight:500;">${this.fmtShort(c['Award Amount'])}</td>
+           <td class="text-right"><strong style="font-family:'Roboto Mono'; font-weight:500;">${this.fmtShort(c['Award Amount'])}</strong></td>
            <td style="font-family:'Roboto Mono'">${c['Start Date']}</td>
          </tr>`;
     }).join('');
   },
 
   exportData() {
-    alert("Exporting data for " + this.target);
+    // Generate actual CSV string from the active target's contracts
+    if (!this.data || !this.data.contracts.length) {
+      alert("No data available to export.");
+      return;
+    }
+    
+    const contracts = this.data.contracts;
+    
+    // Create headers
+    const headers = ["Description", "Awarding Agency", "Recipient Name", "Award Amount", "Start Date", "Award ID", "Type"];
+    
+    // Map rows to CSV format (handling commas in description strings)
+    const rows = contracts.map(c => {
+      const desc = `"${(c['Description'] || '').replace(/"/g, '""')}"`;
+      const agency = `"${c['Awarding Agency'] || ''}"`;
+      const rec = `"${c['Recipient Name'] || ''}"`;
+      const amt = c['Award Amount'] || 0;
+      const date = c['Start Date'] || '';
+      const id = c['Award ID'] || '';
+      const isPrime = (c['Recipient Name']||'').toLowerCase().includes(this.target.toLowerCase().replace(/[,.]/g, '')) ? 'Prime' : 'Sub/Partner';
+      
+      return [desc, agency, rec, amt, date, id, isPrime].join(",");
+    });
+    
+    // Combine and trigger download
+    const csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\n" + rows.join("\n");
+    const encodedUri = encodeURI(csvContent);
+    
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `GovCap_${this.target.replace(/\\s+/g, '_')}_Extract.csv`);
+    document.body.appendChild(link); // Required for FF
+    
+    link.click(); 
+    document.body.removeChild(link);
   },
 
   getFY(d) { return d.getMonth() >= 9 ? d.getFullYear() + 1 : d.getFullYear(); },
